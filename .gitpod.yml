@@ -1,0 +1,23 @@
+# This .gitpod.yml file automates the setup for a Terraform project.
+# It ensures necessary scripts are executable and then runs them in a specific order.
+# The 'tasks' section defines one or more automated processes that run on workspace startup.
+tasks:
+  # The 'name' gives a clear title to this task, which will appear in the terminal.
+  - name: Terraform Setup
+    # The 'command' property runs a sequence of shell commands.
+    # The '|' character allows for multi-line commands.
+    # The '&&' operator ensures that each command only runs if the previous one succeeded.
+    # The '\' character is used for line continuation for readability.
+    command: |
+      echo "Starting Terraform setup..." && \
+      chmod +x install_terraform.sh && \
+      echo "Granted executable permissions to install_terraform.sh" && \
+      chmod +x login_terraform.sh && \
+      echo "Granted executable permissions to login_terraform.sh" && \
+      ./install_terraform.sh && \
+      echo "Installation script executed." && \
+      ./login_terraform.sh && \
+      echo "Login script executed." && \
+      source ./login_terraform.sh && \
+      echo "Login environment sourced." && \
+      echo "Terraform setup complete and ready to use!"
