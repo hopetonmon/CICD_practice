@@ -26,3 +26,5 @@ jobs:
       # Step 2: A simple command to print a message to the console.
       - name: A completion message
         run: echo "Hello, Code has been PUSHED -GitHub Actions!"
+
+#Go to actions Tab on associated repository to see pipeline in proccess
