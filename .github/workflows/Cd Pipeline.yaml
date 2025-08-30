@@ -1,0 +1,58 @@
+# This is a basic GitHub Actions workflow for a Continuous Deployment (CD) pipeline.
+
+# The name of the workflow as it will appear in the GitHub UI.
+name: CD Pipeline
+
+# The event that triggers the workflow. In this case, it runs whenever 
+# Triggered manually from the "Actions" tab in your GitHub repository.  You will see a "Run workflow" button, and you can even provide input parameters if needed.
+on:
+  workflow_dispatch:
+
+ # Define the jobs for the pipeline.
+jobs:
+  # Job 1: Validate and plan the Terraform changes.
+  validate-and-plan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        # This action installs the Terraform CLI on the runner.
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Format Check
+        # This step checks for proper code formatting.
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        # This is the "test" step for your infrastructure code.
+        # It validates the syntax and configuration files.
+        run: terraform validate
+
+      - name: Terraform Plan
+        # This step creates a plan of what Terraform will do.
+        # It does not make any changes but is a crucial safety check.
+        run: terraform plan -input=false
+
+  # Job 2: Deploy the infrastructure.
+  deploy:
+    # This job will only run if the 'validate-and-plan' job was successful.
+    needs: [validate-and-plan]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        # We need to check out the code again in this job to access the .tf file.
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        # Set up the Terraform CLI again for this job.
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Apply
+# This applies the terraform code
+        run: |
+          echo "Applying Terraform changes..."
+          terraform apply -auto-approve -input=false
