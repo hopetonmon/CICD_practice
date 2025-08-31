@@ -4,11 +4,11 @@
 name: CD Pipeline
 
 # The event that triggers the workflow. In this case, it runs whenever 
-# Triggered manually from the "Actions" tab in your GitHub repository.  You will see a "Run workflow" button, and you can even provide input parameters if needed.
+# triggered manually from the "Actions" tab in your GitHub repository.  You will see a "Run workflow" button, and you can even provide input parameters if needed.
 on:
   workflow_dispatch:
 
- # Define the jobs for the pipeline.
+# Define the jobs for the pipeline.
 jobs:
   # Job 1: Validate and plan the Terraform changes.
   validate-and-plan:
@@ -21,6 +21,10 @@ jobs:
       - name: Setup Terraform
         # This action installs the Terraform CLI on the runner.
         uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        # Initialize the working directory and install required providers.
+        run: terraform init
 
       - name: Terraform Format Check
         # This step checks for proper code formatting.
@@ -50,9 +54,13 @@ jobs:
       - name: Setup Terraform
         # Set up the Terraform CLI again for this job.
         uses: hashicorp/setup-terraform@v2
+      
+      - name: Terraform Init
+        # Initialize the working directory and install required providers.
+        run: terraform init
 
       - name: Terraform Apply
-# This applies the terraform code
+        # This applies the terraform code
         run: |
           echo "Applying Terraform changes..."
           terraform apply -auto-approve -input=false
