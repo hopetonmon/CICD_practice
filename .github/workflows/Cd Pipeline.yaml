@@ -46,7 +46,7 @@ jobs:
     needs: [validate-and-plan]
     runs-on: ubuntu-latest
     env:
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}  #Make sure your The cloud api token has the samme exact name as shown "TF_TOKEN_app_terraform_io"
       TF_VAR_HOPETONMON_COPY_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_HOPETONMON_COPY_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_AWS_REGION: "us-east-1"
@@ -73,3 +73,5 @@ jobs:
         run: |
           echo "Applying Terraform changes..."
           terraform apply -auto-approve
+
+#When using Terraform Cloud or Enterprise, Terraform expects the token to be available in an environment variable named TF_TOKEN_app_terraform_io. If you set your secret as TF_API_TOKEN but do not assign it to TF_TOKEN_app_terraform_io, Terraform won't find the token and will throw that error.
