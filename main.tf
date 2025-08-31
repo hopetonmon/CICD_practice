@@ -9,7 +9,7 @@ terraform {
     }
   }
 
-#----------------CLOUD CONFIGURATION--------------------------------
+  #----------------CLOUD CONFIGURATION--------------------------------
   cloud {
     organization = "Foundationmon"
     workspaces {
@@ -20,49 +20,49 @@ terraform {
 
 #-----------------------VARIABLES-----------------------------
 variable "HOPETONMON_COPY_ACCESS_KEY" {
-    description = "HopetonMon Copy AWS Access Key"
-    type        = string
-    sensitive = true
+  description = "HopetonMon Copy AWS Access Key"
+  type        = string
+  sensitive   = true
 }
 
 variable "HOPETONMON_COPY_SECRET_KEY" {
-    description = "HopetonMon Copy AWS Secret Key"
-    type        = string
-    sensitive = true
-  
+  description = "HopetonMon Copy AWS Secret Key"
+  type        = string
+  sensitive   = true
+
 }
 
 variable "AWS_REGION" {
-    description = "AWS Region"
-    type        = string
+  description = "AWS Region"
+  type        = string
 }
 
 variable "AVAILABILITY_ZONE" {
-    description = "Availability Zone (Distinct loaction in the Region)"
-    type        = string
+  description = "Availability Zone (Distinct loaction in the Region)"
+  type        = string
 }
 
 variable "AVAILABILITY_ZONE2" {
-    description = "Availability Zone 2 (Distinct loaction in the Region)"
-    type        = string
-  
+  description = "Availability Zone 2 (Distinct loaction in the Region)"
+  type        = string
+
 }
 
 
 #------------------PROVIDER DEFINITION----------------------
 provider "aws" {
-    region     = var.AWS_REGION
-    access_key = var.HOPETONMON_COPY_ACCESS_KEY
-    secret_key = var.HOPETONMON_COPY_SECRET_KEY
-  
+  region     = var.AWS_REGION
+  access_key = var.HOPETONMON_COPY_ACCESS_KEY
+  secret_key = var.HOPETONMON_COPY_SECRET_KEY
+
 }
 
 #-------------------VPC---------------------
 resource "aws_vpc" "vm_vpc" {
-    cidr_block = "10.0.0.0/16"
-    enable_dns_support = true #Enables or disables DNS resolution within the VPC.
-    enable_dns_hostnames = true # Enables or disables the assignment of public DNS hostnames to instances launched in the VPC.
-    tags = {
-        Name = "vm_vpc"
-    }
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true #Enables or disables DNS resolution within the VPC.
+  enable_dns_hostnames = true # Enables or disables the assignment of public DNS hostnames to instances launched in the VPC.
+  tags = {
+    Name = "vm_vpc"
+  }
 }
