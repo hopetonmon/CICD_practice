@@ -51,7 +51,7 @@ variable "AVAILABILITY_ZONE2" {
 
 #------------------PROVIDER DEFINITION----------------------
 provider "aws" {
-  region     = var.AWS_REGION
+  region     = "us-east-2"
   access_key = var.HOPETONMON_COPY_ACCESS_KEY
   secret_key = var.HOPETONMON_COPY_SECRET_KEY
 
