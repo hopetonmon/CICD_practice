@@ -66,14 +66,3 @@ resource "aws_vpc" "vm_vpc" {
     Name = "vm_vpc"
   }
 }
-
-#-------------------SUBNETS---------------------
-resource "aws_subnet" "public_subnet1" {
-    vpc_id            = aws_vpc.web_vpc.id
-    cidr_block        = "10.0.1.0/24"
-    availability_zone =  var.AVAILABILITY_ZONE
-    map_public_ip_on_launch = true #If set to true: Instances launched in this subnet will automatically be assigned a public IP address. This is useful for subnets that need to host publicly accessible resources, such as web servers.
-    tags = {
-        Name = "public_subnet1"
-    }
-}
