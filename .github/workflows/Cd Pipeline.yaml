@@ -1,77 +1,54 @@
 # This is a basic GitHub Actions workflow for a Continuous Deployment (CD) pipeline.
 
-# The name of the workflow as it will appear in the GitHub UI.
 name: CD Pipeline
 
-# The event that triggers the workflow. In this case, it runs whenever
-# triggered manually from the "Actions" tab in your GitHub repository.  You will see a "Run workflow" button, and you can even provide input parameters if needed.
 on:
   workflow_dispatch:
 
-# Define the jobs for the pipeline.
 jobs:
-  # Job 1: Validate and plan the Terraform changes.
   validate-and-plan:
     runs-on: ubuntu-latest
     env:
       TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
       TF_VAR_HOPETONMON_COPY_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_HOPETONMON_COPY_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      TF_VAR_AWS_REGION: "us-east-1"
-      TF_VAR_AVAILABILITY_ZONE: "us-east-1a"
-      TF_VAR_AVAILABILITY_ZONE2: "us-east-1b"
-    
+      TF_VAR_AWS_REGION: "us-east-2"
+      TF_VAR_AVAILABILITY_ZONE: "us-east-2a"
+      TF_VAR_AVAILABILITY_ZONE2: "us-east-2b"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Setup Terraform
-        # This action installs the Terraform CLI on the runner.
-        # It automatically handles authentication to Terraform Cloud using TF_API_TOKEN.
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        # Initialize the working directory and install required providers.
-        # The TF_API_TOKEN environment variable will be used here for authentication.
         run: terraform init
       
       - name: Terraform Plan
-        # This step creates a plan of what Terraform will do.
-        # It does not make any changes but is a crucial safety check.
         run: terraform plan
 
-  # Job 2: Deploy the infrastructure.
   deploy:
-    # This job will only run if the 'validate-and-plan' job was successful.
     needs: [validate-and-plan]
     runs-on: ubuntu-latest
     env:
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}  #Make sure your The cloud api token has the samme exact name as shown "TF_TOKEN_app_terraform_io"
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
       TF_VAR_HOPETONMON_COPY_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_HOPETONMON_COPY_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      TF_VAR_AWS_REGION: "us-east-1"
-      TF_VAR_AVAILABILITY_ZONE: "us-east-1a"
-      TF_VAR_AVAILABILITY_ZONE2: "us-east-1b"
-
+      TF_VAR_AWS_REGION: "us-east-2"
+      TF_VAR_AVAILABILITY_ZONE: "us-east-2a"
+      TF_VAR_AVAILABILITY_ZONE2: "us-east-2b"
     steps:
       - name: Checkout Code
-        # We need to check out the code again in this job to access the .tf file.
         uses: actions/checkout@v4
 
       - name: Setup Terraform
-        # Set up the Terraform CLI again for this job.
-        # It automatically handles authentication to Terraform Cloud using TF_API_TOKEN.
         uses: hashicorp/setup-terraform@v2
-      
+
       - name: Terraform Init
-        # Initialize the working directory and install required providers.
-        # The TF_API_TOKEN environment variable will be used here for authentication.
         run: terraform init
-        
+
       - name: Terraform Apply
-        # This applies the terraform code
         run: |
           echo "Applying Terraform changes..."
           terraform apply -auto-approve
-
-#When using Terraform Cloud or Enterprise, Terraform expects the token to be available in an environment variable named TF_TOKEN_app_terraform_io. If you set your secret as TF_API_TOKEN but do not assign it to TF_TOKEN_app_terraform_io, Terraform won't find the token and will throw that error.
