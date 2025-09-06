@@ -1,5 +1,5 @@
 # This is a basic GitHub Actions workflow for a Continuous Deployment (CD) pipeline.
-
+# TIP:MAKE SURE YOUR REGIONS MATCH UP!!!!!!!!!!  This prevents terraform form trying to destroy resources that are not in the same region!!!!
 name: CD Pipeline
 
 on:
