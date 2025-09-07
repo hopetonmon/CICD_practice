@@ -4,7 +4,7 @@
 name: CD Pipeline
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Run of this workflow is triggered Manually via Actions Tab on GitHUb
 
 jobs:
   validate-and-plan: #Name of Job
