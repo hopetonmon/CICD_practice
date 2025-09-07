@@ -1,15 +1,16 @@
 # This is a basic GitHub Actions workflow for a Continuous Deployment (CD) pipeline.
 # TIP:MAKE SURE YOUR REGIONS MATCH UP!!!!!!!!!!  This prevents terraform form trying to destroy resources that are not in the same region!!!!
+# TIP: For example, Terraform looks for environment variables starting with TF_VAR_ to set input variables, so you don't need to pass them explicitly via command-line flags.
 name: CD Pipeline
 
 on:
   workflow_dispatch:
 
 jobs:
-  validate-and-plan:
+  validate-and-plan: #Name of Job
     runs-on: ubuntu-latest
-    env:
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+    env: #Environment variables used in Pipeline. Variables pulled form Git Secrets
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }} #This enviornment name is needed for terraform to automatically connecct to Terraform Cloud Login
       TF_VAR_HOPETONMON_COPY_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
       TF_VAR_HOPETONMON_COPY_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_AWS_REGION: "us-east-2"
@@ -28,7 +29,7 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-  deploy:
+  deploy: #Name of Job
     needs: [validate-and-plan]
     runs-on: ubuntu-latest
     env:
